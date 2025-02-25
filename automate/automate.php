@@ -70,6 +70,32 @@ foreach ($jsonFiles as $jsonFile) {
     $routesContent = generateRoutesContent($tableName);
     file_put_contents($routesFile, $routesContent, FILE_APPEND); // Tambahkan route baru
     echo "Routes added to api.php for {$tableName}\n";
+
+    // Generate List.tsx
+    $listTsxContent = generateListTsxContent($tableName, $columns);
+    $listTsxFile = "../resources/js/src/pages/{$modelName}/List.tsx";
+    if (!is_dir(dirname($listTsxFile))) {
+        mkdir(dirname($listTsxFile), 0777, true); // Buat folder jika belum ada
+    }
+    file_put_contents($listTsxFile, $listTsxContent); // Timpa file yang sudah ada
+    echo "List.tsx file created/updated: {$listTsxFile}\n";
+
+    // // Generate List.tsx
+    // $listTsxContent = generateListTsxContent($tableName, $columns);
+    // $listTsxFile = "../resources/js/src/pages/{$modelName}/List.tsx";
+    // if (!is_dir(dirname($listTsxFile))) {
+    //     mkdir(dirname($listTsxFile), 0777, true); // Buat folder jika belum ada
+    // }
+    // file_put_contents($listTsxFile, $listTsxContent); // Timpa file yang sudah ada
+    // echo "List.tsx file created/updated: {$listTsxFile}\n";
+
+    // // Tambahkan rute ke routes.tsx
+    // addRouteToRoutesTsx($tableName);
+    // Generate routes.tsx
+    $routesTsxContent = generateRoutesTsxContent($jsonFiles);
+    $routesTsxFile = "../resources/js/src/router/routes.tsx";
+    file_put_contents($routesTsxFile, $routesTsxContent); // Timpa file yang sudah ada
+    echo "routes.tsx file created/updated: {$routesTsxFile}\n";
 }
 
 /*********************************
@@ -358,4 +384,161 @@ function generateRoutesContent($tableName) {
     return <<<EOT
 Route::apiResource('{$pluralTableName}', \\App\\Http\\Controllers\\{$modelName}Controller::class);
 EOT . PHP_EOL;
+}
+
+/********************************
+ * TSX
+ */
+
+function generateListTsxContent($tableName, $columns) {
+    $modelName = ucfirst($tableName);
+    $pluralTableName = Str::plural($tableName);
+
+    // Generate kolom untuk List.tsx
+    $columnsList = [];
+    $columnsList[] = "{ accessor: 'no', title: 'No', sortable: false, hidden: false }";
+
+    foreach ($columns as $column) {
+        preg_match("/'\w+'/", $column, $matches);
+        if (!empty($matches)) {
+            $columnName = trim($matches[0], "'"); // Ambil nama kolom
+            $columnTitle = ucwords(str_replace('_', ' ', $columnName)); // Format judul kolom
+            $columnsList[] = "{ accessor: '$columnName', title: '$columnTitle', sortable: true, hidden: false }";
+        }
+    }
+
+    // Tambahkan kolom created_at dan updated_at
+    $columnsList[] = "{ accessor: 'created_at', title: 'Created At', sortable: true, hidden: false }";
+    $columnsList[] = "{ accessor: 'updated_at', title: 'Updated At', sortable: true, hidden: false }";
+
+    // Gabungkan kolom ke dalam string
+    $columnsString = implode(",\n        ", $columnsList);
+
+    $stub = <<<EOT
+import React from 'react';
+import List from '../../components/Entity/List';
+
+const {$modelName}List = () => {
+    const columns = [
+        {$columnsString}
+    ];
+
+    return (
+        <List columns={columns} />
+    );
+};
+
+export default {$modelName}List;
+EOT;
+
+    return $stub;
+}
+
+// function addRouteToRoutesTsx($tableName) {
+//     $modelName = ucfirst($tableName);
+//     $pluralTableName = Str::plural($tableName);
+
+//     // Path ke file routes.tsx
+//     $routesFile = "../resources/js/src/router/routes.tsx";
+
+//     // Baca isi file routes.tsx
+//     $routesContent = file_get_contents($routesFile);
+
+//     // Cari posisi terakhir dari array `routes`
+//     $lastRoutePosition = strrpos($routesContent, '},');
+
+//     // Jika tidak ditemukan, cari posisi terakhir dari array `routes` tanpa koma
+//     if ($lastRoutePosition === false) {
+//         $lastRoutePosition = strrpos($routesContent, '}');
+//     }
+
+//     // Jika masih tidak ditemukan, beri pesan error
+//     if ($lastRoutePosition === false) {
+//         echo "Error: Tidak dapat menemukan posisi terakhir dari array routes.\n";
+//         return;
+//     }
+
+//     // Tambahkan rute baru setelah posisi terakhir
+//     $newRoute = <<<EOT
+//     {
+//         path: '/{$pluralTableName}',
+//         element: <{$modelName}List />,
+//         layout: 'default',
+//     },
+// EOT;
+
+//     // Sisipkan rute baru ke dalam konten
+//     $routesContent = substr_replace($routesContent, $newRoute, $lastRoutePosition + 2, 0);
+
+//     // Tambahkan import untuk komponen List
+//     $importStatement = "const {$modelName}List = lazy(() => import('../pages/{$modelName}/List'));\n";
+//     $routesContent = preg_replace("/(import React from 'react';\nimport \{ lazy \} from 'react';)/", "$1\n$importStatement", $routesContent);
+
+//     // Simpan perubahan ke file routes.tsx
+//     file_put_contents($routesFile, $routesContent);
+
+//     echo "Route added to routes.tsx for {$modelName}List\n";
+// }
+
+function generateRoutesTsxContent($jsonFiles) {
+    $imports = [];
+    $routes = [];
+
+    // Import default untuk Index
+    $imports[] = "const Index = lazy(() => import('../pages/Index'));";
+    $imports[] = "import App from '../components/FormBuilder/App';";
+
+    // Loop melalui setiap file JSON
+    foreach ($jsonFiles as $jsonFile) {
+        // Baca isi file JSON
+        $jsonContent = file_get_contents($jsonFile);
+        $data = json_decode($jsonContent, true);
+
+        // Ambil nama tabel dari formName
+        $tableName = strtolower($data['formName']);
+        $modelName = ucfirst($tableName);
+        $pluralTableName = Str::plural($tableName);
+
+        // Tambahkan import untuk komponen List
+        $imports[] = "const {$modelName}List = lazy(() => import('../pages/{$modelName}/List'));";
+
+        // Tambahkan rute untuk tabel ini
+        $routes[] = "    {
+        path: '/{$pluralTableName}',
+        element: <{$modelName}List />,
+        layout: 'default',
+    },";
+    }
+
+    // Gabungkan impor dan rute ke dalam konten file routes.tsx
+    $importsString = implode("\n", $imports);
+    $routesString = implode("\n", $routes);
+
+    $stub = <<<EOT
+import React from 'react';
+import { lazy } from 'react';
+
+{$importsString}
+
+const routes = [
+    // Dashboard
+    {
+        path: '/',
+        element: <Index />,
+        layout: 'default',
+    },
+    {
+        path: '/form-builder',
+        element: <App />,
+        layout: 'default',
+    },
+
+    // Rute untuk setiap tabel
+{$routesString}
+];
+
+export { routes };
+EOT;
+
+    return $stub;
 }
