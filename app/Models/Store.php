@@ -2,32 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Store extends Model
+class Store extends BaseModel
 {
-    use HasFactory;
-
-    protected $fillable = [
-        'id',
-        'input',
-        'textarea',
-        'checkbox',
-        'date',
-        'datetime',
-        'integer',
-        'float',
-        'long-text',
-        'password',
-        'small-text',
-        'select',
-        'time',
-        'code',
-        'color',
-        'image',
-        'markdown-editor',
-        'text-editor',
-        'multiple-select'
-    ];
 }

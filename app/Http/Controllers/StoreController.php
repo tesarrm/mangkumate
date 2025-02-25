@@ -2,35 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\BaseController;
 use App\Models\Store;
-use Illuminate\Http\Request;
 
-class StoreController extends Controller
+class StoreController extends BaseController
 {
-    public function index()
+    protected $model;
+    protected $table = 'stores';
+
+    public function __construct(Store $model)
     {
-        return Store::all();
+        parent::__construct($model, $this->table, [], [], []);
     }
 
-    public function store(Request $request)
+    protected function getValidationRules($id = null)
     {
-        return Store::create($request->all());
-    }
+        $rules = [
+            'input' => 'nullable|string|max:255',
+            'textarea' => 'nullable|string',
+            'checkbox' => 'boolean',
+            'date' => 'nullable|date',
+            'datetime' => 'nullable|date',
+            'integer' => 'nullable|integer',
+            'float' => 'nullable|numeric',
+            'long-text' => 'nullable|string',
+            'password' => 'nullable|string|max:255',
+            'small-text' => 'nullable|string|max:255',
+            'select' => 'nullable|string|max:255',
+            'time' => 'nullable|string',
+            'code' => 'nullable|string',
+            'color' => 'nullable|string|max:255',
+            'image' => 'nullable|string|max:255',
+            'markdown-editor' => 'nullable|string',
+            'text-editor' => 'nullable|string',
+            'multiple-select' => 'nullable|string|max:255',
+        ];
 
-    public function show(Store $store)
-    {
-        return $store;
-    }
-
-    public function update(Request $request, Store $store)
-    {
-        $store->update($request->all());
-        return $store;
-    }
-
-    public function destroy(Store $store)
-    {
-        $store->delete();
-        return response()->noContent();
+        return $rules;
     }
 }

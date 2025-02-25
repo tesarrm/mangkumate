@@ -2,35 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\BaseController;
 use App\Models\Company;
-use Illuminate\Http\Request;
 
-class CompanyController extends Controller
+class CompanyController extends BaseController
 {
-    public function index()
+    protected $model;
+    protected $table = 'companies';
+
+    public function __construct(Company $model)
     {
-        return Company::all();
+        parent::__construct($model, $this->table, [], [], []);
     }
 
-    public function store(Request $request)
+    protected function getValidationRules($id = null)
     {
-        return Company::create($request->all());
-    }
+        $rules = [
+            'input' => 'nullable|string|max:255',
+            'textarea' => 'nullable|string',
+            'checkbox' => 'boolean',
+            'date' => 'nullable|date',
+            'datetime' => 'nullable|date',
+            'integer' => 'nullable|integer',
+            'float' => 'nullable|numeric',
+            'long-text' => 'nullable|string',
+            'password' => 'nullable|string|max:255',
+            'small-text' => 'nullable|string|max:255',
+            'select' => 'nullable|string|max:255',
+            'time' => 'nullable|string',
+            'code' => 'nullable|string',
+            'color' => 'nullable|string|max:255',
+            'image' => 'nullable|string|max:255',
+            'markdown-editor' => 'nullable|string',
+            'text-editor' => 'nullable|string',
+            'multiple-select' => 'nullable|string|max:255',
+        ];
 
-    public function show(Company $company)
-    {
-        return $company;
-    }
-
-    public function update(Request $request, Company $company)
-    {
-        $company->update($request->all());
-        return $company;
-    }
-
-    public function destroy(Company $company)
-    {
-        $company->delete();
-        return response()->noContent();
+        return $rules;
     }
 }
