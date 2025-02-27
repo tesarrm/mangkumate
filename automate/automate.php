@@ -3,7 +3,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use Illuminate\Support\Str;
 
 // Direktori tempat file JSON disimpan
-$jsonDir = 'tables-json/';
+// $jsonDir = 'tables-json/';
+$jsonDir = 'entities/';
 
 // Ambil semua file JSON di folder
 $jsonFiles = glob($jsonDir . '*.json');
@@ -14,7 +15,7 @@ sort($jsonFiles);
 // Bersihkan file routes sebelum menulis yang baru
 $routesFile = '../routes/api.php';
 if (file_exists($routesFile)) {
-    file_put_contents($routesFile, "<?php\n\nuse Illuminate\Support\Facades\Route;\n\n"); // Reset isi file routes
+    file_put_contents($routesFile, "<?php\n\nuse Illuminate\Support\Facades\Route;\n\nRoute::apiResource('builders', \App\Http\Controllers\BuilderController::class);\n\n"); // Reset isi file routes
 }
 
 // Loop melalui setiap file JSON
@@ -50,7 +51,14 @@ foreach ($jsonFiles as $jsonFile) {
 
     // Generate migration
     $migrationContent = generateMigrationContent($tableName, $columns);
-    $migrationFile = "../database/migrations/create_{$tableName}_table.php";
+    // $migrationFile = "../database/migrations/create_{$tableName}_table.php";
+    // $migrationFile = "../database/migrations/{$jsonFile}_create_table.php";
+    // Hapus ekstensi .json dari $jsonFile
+    $jsonFileName = pathinfo($jsonFile, PATHINFO_FILENAME);
+
+    // Simpan sebagai migration file
+    $migrationFile = "../database/migrations/{$jsonFileName}_create_table.php";
+    
     file_put_contents($migrationFile, $migrationContent); // Timpa file yang sudah ada
     echo "Migration file created/updated: {$migrationFile}\n";
 
@@ -486,7 +494,7 @@ function generateRoutesTsxContent($jsonFiles) {
 
     // Import default untuk Index
     $imports[] = "const Index = lazy(() => import('../pages/Index'));";
-    $imports[] = "import App from '../components/FormBuilder/App';";
+    // $imports[] = "import App from '../components/FormBuilder/App';";
 
     // Loop melalui setiap file JSON
     foreach ($jsonFiles as $jsonFile) {
@@ -518,6 +526,9 @@ function generateRoutesTsxContent($jsonFiles) {
 import React from 'react';
 import { lazy } from 'react';
 
+const App = lazy(() => import('../components/FormBuilder/App'));
+const BuilderList = lazy(() => import('../pages/Builder/BuilderList'));
+
 {$importsString}
 
 const routes = [
@@ -528,8 +539,13 @@ const routes = [
         layout: 'default',
     },
     {
-        path: '/form-builder',
+        path: '/builders/:form_name',
         element: <App />,
+        layout: 'default',
+    },
+    {
+        path: '/builders',
+        element: <BuilderList />,
         layout: 'default',
     },
 

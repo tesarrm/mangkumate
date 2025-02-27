@@ -1,11 +1,12 @@
 import React from 'react';
 import { lazy } from 'react';
 
-const Index = lazy(() => import('../pages/Index'));
-import App from '../components/FormBuilder/App';
+const App = lazy(() => import('../components/FormBuilder/App'));
 const BuilderList = lazy(() => import('../pages/Builder/BuilderList'));
-const CompanyList = lazy(() => import('../pages/Company/List'));
-const StoreList = lazy(() => import('../pages/Store/List'));
+
+const Index = lazy(() => import('../pages/Index'));
+const BeratList = lazy(() => import('../pages/Berat/List'));
+const ProductList = lazy(() => import('../pages/Product/List'));
 
 const routes = [
     // Dashboard
@@ -15,31 +16,25 @@ const routes = [
         layout: 'default',
     },
     {
-        path: '/form-builder',
-        element: <App />,
-        layout: 'default',
-    },
-
-    {
         path: '/builders/:form_name',
         element: <App />,
         layout: 'default',
     },
-
-    // Rute untuk setiap tabel
     {
         path: '/builders',
         element: <BuilderList />,
         layout: 'default',
     },
+
+    // Rute untuk setiap tabel
     {
-        path: '/companies',
-        element: <CompanyList />,
+        path: '/berats',
+        element: <BeratList />,
         layout: 'default',
     },
     {
-        path: '/stores',
-        element: <StoreList />,
+        path: '/products',
+        element: <ProductList />,
         layout: 'default',
     },
 ];

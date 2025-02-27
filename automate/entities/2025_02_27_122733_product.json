@@ -1,0 +1,59 @@
+{
+    "formName": "Product",
+    "sections": [
+        {
+            "id": "section-1",
+            "label": null,
+            "name": "section_1",
+            "description": "This is section 1",
+            "columns": [
+                {
+                    "id": "column-1",
+                    "label": null,
+                    "name": "column_1",
+                    "description": "This is column 1",
+                    "elements": [
+                        {
+                            "id": "input-1740634303844",
+                            "sectionId": "section-1",
+                            "columnId": "column-1",
+                            "order": null,
+                            "type": "input",
+                            "label": "Name",
+                            "name": "name",
+                            "length": 0,
+                            "mandatory": false,
+                            "notNullable": false,
+                            "options": [],
+                            "defaultValue": null,
+                            "hidden": false,
+                            "readOnly": false,
+                            "unique": false,
+                            "description": null,
+                            "placeholder": null
+                        },
+                        {
+                            "id": "select-1740659276496",
+                            "sectionId": "section-1",
+                            "columnId": "column-1",
+                            "order": 1,
+                            "type": "select",
+                            "label": null,
+                            "name": "category",
+                            "length": 0,
+                            "mandatory": false,
+                            "notNullable": false,
+                            "options": [],
+                            "defaultValue": null,
+                            "hidden": false,
+                            "readOnly": false,
+                            "unique": false,
+                            "description": null,
+                            "placeholder": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

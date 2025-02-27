@@ -1,0 +1,59 @@
+{
+    "formName": "Berat",
+    "sections": [
+        {
+            "id": "section-1",
+            "label": null,
+            "name": "section_1",
+            "description": "This is section 1",
+            "columns": [
+                {
+                    "id": "column-1",
+                    "label": null,
+                    "name": "column_1",
+                    "description": "This is column 1",
+                    "elements": [
+                        {
+                            "id": "input-1740634303844",
+                            "sectionId": "section-1",
+                            "columnId": "column-1",
+                            "order": null,
+                            "type": "input",
+                            "label": null,
+                            "name": "input-1740634303844",
+                            "length": 0,
+                            "mandatory": false,
+                            "notNullable": false,
+                            "options": [],
+                            "defaultValue": null,
+                            "hidden": false,
+                            "readOnly": false,
+                            "unique": false,
+                            "description": null,
+                            "placeholder": null
+                        },
+                        {
+                            "id": "button-1740656882843",
+                            "sectionId": "section-1",
+                            "columnId": "column-1",
+                            "order": 1,
+                            "type": "button",
+                            "label": null,
+                            "name": "button-1740656882843",
+                            "length": 0,
+                            "mandatory": false,
+                            "notNullable": false,
+                            "options": [],
+                            "defaultValue": null,
+                            "hidden": false,
+                            "readOnly": false,
+                            "unique": false,
+                            "description": null,
+                            "placeholder": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}
