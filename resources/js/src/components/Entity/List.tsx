@@ -1,21 +1,10 @@
-/**
- * # Fiture Table
- * - hidde show field
- * - sort field
- * - search global
- * - search/filter field
- * - pagination
- * - page size show list
- */
-
-import React, { useCallback } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { DataTable } from 'mantine-datatable';
-import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';
 import Dropdown from '../Dropdown';
-import { deleteConfirmation, formatDate } from '../tools';
+import { deleteConfirmation, entityUrl, formatDate } from '../tools';
 import Breadcrumb from "../Breadcumb";
 import ExportModal from "./Export/ExportModal";
 import IconPlus from "../Icon/IconPlus";
@@ -39,23 +28,25 @@ interface Column {
     render?: (record: any) => React.ReactNode;
 }
 
-const entityUrl = () => {
-    const location = useLocation();
-    const pathnames = location.pathname.split('/').filter((x) => x);
-    const entity = pathnames[0];
-
-    return entity;
-}
-
-interface GenericDataTableProps {
+interface ListProps {
     entity?: string;
     columns: Column[];
+    customRenderRow?: (record: any) => React.ReactNode;
+    customActions?: React.ReactNode;
+    customFilters?: React.ReactNode;
+    onRowClick?: (record: any) => void;
+    fetchData?: (params: any) => Promise<any>;
 }
 
-const List = ({ 
+const List: React.FC<ListProps> = ({ 
     entity = entityUrl(), 
     columns, 
-}: GenericDataTableProps) => {
+    customRenderRow,
+    customActions,
+    customFilters,
+    onRowClick,
+    fetchData,
+}) => {
     const navigate = useNavigate();
     const [clickTimeout, setClickTimeout] = useState<NodeJS.Timeout | null>(null);
     const { 
@@ -162,53 +153,23 @@ const List = ({
                 <Breadcrumb/>
 
                 <div className="flex flex-row items-center gap-3 w-auto">
-                    <div className="relative">
-                        {selectedRecords?.length !== 0 ? (
-                            <div className="flex items-center justify-center">
-                                <div className="dropdown">
-                                    <Dropdown
-                                        placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
-                                        btnClassName="btn btn-primary dropdown-toggle"
-                                        button={
-                                            <>
-                                                <span className="hidden sm:inline">Action</span>
-                                                <span>
-                                                    <svg className="w-4 h-4 ltr:ml-1 rtl:mr-1 inline-block" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                        <path d="M19 9L12 15L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                    </svg>
-                                                </span>
-                                            </>
-                                        }
-                                    >
-                                        <ul className="!min-w-[170px]">
-                                            <li>
-                                                <button type="button" onClick={() => deleteRow()}>Delete</button>
-                                            </li>
-                                            <li>
-                                                <button type="button" onClick={() => setModal(true)}>Export</button>
-                                            </li>
-                                        </ul>
-                                    </Dropdown>
-                                </div>
-                            </div>
-                        ) : (
-                            <div className="flex items-center gap-2">
-                                <Link to={`/${entity}/import`} className="btn btn-warning gap-2">
-                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path opacity="0.5" d="M3 15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15" 
-                                            stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                        <path d="M12 3V16M12 16L16 11.625M12 16L8 11.625" 
-                                            stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                    </svg>
-                                    <span className="hidden sm:inline">Import</span>
-                                </Link>
-                                <Link to={`/${entity}/create`} className="btn btn-primary gap-2">
-                                    <IconPlus />
-                                    <span className="hidden sm:inline">Create</span>
-                                </Link>
-                            </div>
-                        )}
-                    </div>
+                    {customActions || (
+                        <div className="flex items-center gap-2">
+                            <Link to={`/${entity}/import`} className="btn btn-warning gap-2">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.5" d="M3 15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15" 
+                                        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                    <path d="M12 3V16M12 16L16 11.625M12 16L8 11.625" 
+                                        stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                                </svg>
+                                <span className="hidden sm:inline">Import</span>
+                            </Link>
+                            <Link to={`/${entity}/create`} className="btn btn-primary gap-2">
+                                <IconPlus />
+                                <span className="hidden sm:inline">Create</span>
+                            </Link>
+                        </div>
+                    )}
                 </div>
 
                 <ExportModal 
@@ -232,77 +193,79 @@ const List = ({
                 <div className="invoice-table">
                     {/* action table */}
                     <div className="mb-4.5 grid grid-cols-1 sm:grid-cols-8 gap-5">
-                        <div className="sm:col-span-5 md:col-span-6 grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
-                            {/* show hidde column */}
-                            <div className="dropdown">
-                                <Dropdown
-                                    placement={`${isRtl ? 'bottom-end' : 'bottom-start'}`}
-                                    btnClassName="!flex items-center justify-between w-full border font-semibold border-white-light dark:border-[#253b5c] rounded-md px-4 py-2 text-sm dark:bg-[#1b2e4b] dark:text-white-dark"
-                                    button={
-                                        <>
-                                            <span className="ltr:mr-1 rtl:ml-1 whitespace-nowrap">Show Fields</span>
-                                            <span>
-                                                <svg className="w-4 h-4 ltr:ml-1 rtl:mr-1 inline-block" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M19 9L12 15L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                                                </svg>
-                                            </span>
-                                        </>
-                                    }
+                        {customFilters || (
+                            <div className="sm:col-span-5 md:col-span-6 grid gap-5 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-6">
+                                {/* show hidde column */}
+                                <div className="dropdown">
+                                    <Dropdown
+                                        placement={`${isRtl ? 'bottom-end' : 'bottom-start'}`}
+                                        btnClassName="!flex items-center justify-between w-full border font-semibold border-white-light dark:border-[#253b5c] rounded-md px-4 py-2 text-sm dark:bg-[#1b2e4b] dark:text-white-dark"
+                                        button={
+                                            <>
+                                                <span className="ltr:mr-1 rtl:ml-1 whitespace-nowrap">Show Fields</span>
+                                                <span>
+                                                    <svg className="w-4 h-4 ltr:ml-1 rtl:mr-1 inline-block" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                        <path d="M19 9L12 15L5 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                                                    </svg>
+                                                </span>
+                                            </>
+                                        }
+                                    >
+                                        <ul className="!min-w-max">
+                                            {columns
+                                                .filter(col => col.hidden == false) 
+                                                .map((col, i) => {
+                                                return (
+                                                    <li
+                                                        key={i}
+                                                        className="flex flex-col"
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                        }}
+                                                    >
+                                                        <div className="flex items-center px-4 py-1">
+                                                            <label className="cursor-pointer mb-0">
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={!hideCols.includes(col.accessor)}
+                                                                    className="form-checkbox"
+                                                                    onChange={() => toggleColumnVisibility(col.accessor)}
+                                                                />
+                                                                <span className="ltr:ml-2 rtl:mr-2">{col.title}</span>
+                                                            </label>
+                                                        </div>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    </Dropdown>
+                                </div>
+
+                                {/* Dropdown Pilih Kolom + Input Filter */}
+                                <select 
+                                    value={selectedColumn} 
+                                    onChange={(e) => setSelectedColumn(e.target.value)}
+                                    className="form-select"
                                 >
-                                    <ul className="!min-w-max">
-                                        {columns
-                                            .filter(col => col.hidden == false) 
-                                            .map((col, i) => {
-                                            return (
-                                                <li
-                                                    key={i}
-                                                    className="flex flex-col"
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                    }}
-                                                >
-                                                    <div className="flex items-center px-4 py-1">
-                                                        <label className="cursor-pointer mb-0">
-                                                            <input
-                                                                type="checkbox"
-                                                                checked={!hideCols.includes(col.accessor)}
-                                                                className="form-checkbox"
-                                                                onChange={() => toggleColumnVisibility(col.accessor)}
-                                                            />
-                                                            <span className="ltr:ml-2 rtl:mr-2">{col.title}</span>
-                                                        </label>
-                                                    </div>
-                                                </li>
-                                            );
-                                        })}
-                                    </ul>
-                                </Dropdown>
+                                    <option value="">Column Filter</option>
+                                    {columns
+                                        .filter(col => col.accessor !== "no" && col.hidden == false) 
+                                        .map(col => (
+                                            <option key={col.accessor} value={col.accessor}>{col.title}</option>
+                                        ))
+                                    }
+                                </select>
+
+                                {/* search */}
+                                <input 
+                                    type="text"
+                                    value={filterValue}
+                                    onChange={(e) => setFilterValue(e.target.value)}
+                                    placeholder="Value filter"
+                                    className="form-input"
+                                />
                             </div>
-
-                            {/* Dropdown Pilih Kolom + Input Filter */}
-                            <select 
-                                value={selectedColumn} 
-                                onChange={(e) => setSelectedColumn(e.target.value)}
-                                className="form-select"
-                            >
-                                <option value="">Column Filter</option>
-                                {columns
-                                    .filter(col => col.accessor !== "no" && col.hidden == false) 
-                                    .map(col => (
-                                        <option key={col.accessor} value={col.accessor}>{col.title}</option>
-                                    ))
-                                }
-                            </select>
-
-                            {/* search */}
-                            <input 
-                                type="text"
-                                value={filterValue}
-                                onChange={(e) => setFilterValue(e.target.value)}
-                                placeholder="Value filter"
-                                className="form-input"
-                            />
-                        </div>
+                        )}
 
                         <div className="sm:col-span-3 md:col-span-2">
                             {/* search */}
@@ -320,7 +283,7 @@ const List = ({
                                 title: title,
                                 hidden: hidden || hideCols.includes(accessor),
                                 sortable: sortable !== false,
-                                render: render 
+                                render: render || customRenderRow
                             }))}
                             highlightOnHover
                             totalRecords={total}
@@ -334,8 +297,7 @@ const List = ({
                             selectedRecords={selectedRecords}
                             onSelectedRecordsChange={setSelectedRecords}
                             paginationText={({ from, to, totalRecords }) => `Showing ${from} to ${to} of ${totalRecords} entries`}
-                            // onRowClick={(record) => navigate(`/${entity}/${record.id}`)}
-                            onRowClick={(record) => {
+                            onRowClick={onRowClick || ((record) => {
                                 if (clickTimeout) {
                                     clearTimeout(clickTimeout);
                                     setClickTimeout(null);
@@ -347,7 +309,7 @@ const List = ({
                                     }, 300); // Atur delay untuk membedakan single & double click
                                     setClickTimeout(timeout);
                                 }
-                            }}
+                            })}
                         />
                     </div>
                 </div>

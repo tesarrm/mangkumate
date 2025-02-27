@@ -3,6 +3,7 @@ import { lazy } from 'react';
 
 const Index = lazy(() => import('../pages/Index'));
 import App from '../components/FormBuilder/App';
+const BuilderList = lazy(() => import('../pages/Builder/BuilderList'));
 const CompanyList = lazy(() => import('../pages/Company/List'));
 const StoreList = lazy(() => import('../pages/Store/List'));
 
@@ -20,6 +21,11 @@ const routes = [
     },
 
     // Rute untuk setiap tabel
+    {
+        path: '/builders',
+        element: <BuilderList />,
+        layout: 'default',
+    },
     {
         path: '/companies',
         element: <CompanyList />,

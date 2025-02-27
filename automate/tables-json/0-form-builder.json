@@ -1,0 +1,37 @@
+{
+  "formName": "Builder",
+  "sections": [
+    {
+      "id": "section-1",
+      "label": "",
+      "name": "section_1",
+      "description": "This is section 1",
+      "columns": [
+        {
+          "id": "column-1",
+          "label": "",
+          "name": "column_1",
+          "description": "This is column 1",
+          "elements": [
+            {
+              "id": "input-1740479803469",
+              "type": "input",
+              "label": "Name",
+              "name": "name",
+              "length": 0,
+              "mandatory": false,
+              "notNullable": false,
+              "options": [],
+              "defaultValue": "",
+              "hidden": false,
+              "readOnly": false,
+              "unique": false,
+              "description": "",
+              "placeholder": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
