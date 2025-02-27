@@ -5,7 +5,7 @@ import { Dialog, Transition } from '@headlessui/react';
 // Default columns and configuration
 const defaultColumns = [
     { accessor: 'no', title: 'No', sortable: false, hidden: false },
-    { accessor: 'name', title: 'Name', sortable: true, hidden: false },
+    { accessor: 'id', title: 'Entity Name', sortable: true, hidden: false },
     { accessor: 'created_at', title: 'Created At', sortable: true, hidden: false },
     { accessor: 'updated_at', title: 'Updated At', sortable: true, hidden: false }
 ];
@@ -13,20 +13,6 @@ const defaultColumns = [
 const BuilderList = () => {
     const [customConfig, setCustomConfig] = useState<any>({});
     const [modals, setModals] = useState<{ [key: string]: boolean }>({}); // State untuk banyak modal
-
-    // // Load custom configurations dynamically
-    // useEffect(() => {
-    //     const loadCustomConfig = async () => {
-    //         try {
-    //             const config = await import('./custom_builder_list');
-    //             setCustomConfig(config.default);
-    //         } catch (error) {
-    //             console.log('No custom configuration found, using default settings.');
-    //         }
-    //     };
-
-    //     loadCustomConfig();
-    // }, []);
 
     // Load custom configurations dynamically
     useEffect(() => {

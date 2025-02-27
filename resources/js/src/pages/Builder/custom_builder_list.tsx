@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import IconPlus from '../../components/Icon/IconPlus';
 
@@ -83,6 +83,7 @@ export const onRowClick = (record: any) => {
 
 
 import toast from 'react-hot-toast';
+import { useCrudApi } from '../../redux/api/useCrudApi';
 
 // Fungsi untuk mengirim data JSON ke Laravel
 const saveJsonToDatabase = async (formName: string, navigate:any) => {
@@ -242,19 +243,96 @@ const saveJsonToDatabase = async (formName: string, navigate:any) => {
 export const ModalContent1 = ({ closeModal }: { closeModal: () => void }) => {
     const [formName, setFormName] = useState(''); // State untuk menyimpan input formName
     const navigate = useNavigate();
-
-    // const handleCreate = () => {
-    //     if (!formName) {
-    //         alert('Please enter a name for the entity.');
-    //         return;
-    //     }
-
-    //     // Buat file JSON
-    //     createJsonFile(formName);
-
-    //     // Tutup modal
-    //     closeModal();
-    // };
+    const { 
+        useStoreDataMutation, 
+    } = useCrudApi("builders");
+    const [store, { data: dataStore, isSuccess: isSuccessStore, error: errorStore }] = useStoreDataMutation();
+    const jsonData = {
+        formName: formName,
+        sections: [
+            {
+                id: "section-1",
+                label: "",
+                name: "section_1",
+                description: "This is section 1",
+                columns: [
+                    {
+                        id: "column-1",
+                        label: "",
+                        name: "column_1",
+                        description: "This is column 1",
+                        elements: [
+                            {
+                                id: "input-1740634303844",
+                                sectionId: "section-1",
+                                columnId: "column-1",
+                                order: "",
+                                type: "input",
+                                label: "asdf",
+                                name: "input-1740634303844",
+                                length: 0,
+                                mandatory: false,
+                                notNullable: false,
+                                options: [],
+                                defaultValue: "",
+                                hidden: false,
+                                readOnly: false,
+                                unique: false,
+                                description: "",
+                                placeholder: ""
+                            },
+                            {
+                                id: "textarea-1740634401968",
+                                sectionId: "section-1",
+                                columnId: "column-1",
+                                order: 1,
+                                type: "textarea",
+                                label: "",
+                                name: "textarea-1740634401968",
+                                length: 0,
+                                mandatory: false,
+                                notNullable: false,
+                                options: [],
+                                defaultValue: "",
+                                hidden: false,
+                                readOnly: false,
+                                unique: false,
+                                description: "",
+                                placeholder: ""
+                            }
+                        ]
+                    },
+                    {
+                        id: "column-1740634403810",
+                        label: "",
+                        name: "",
+                        description: "",
+                        elements: [
+                            {
+                                id: "checkbox-1740634406622",
+                                sectionId: "section-1",
+                                columnId: "column-1740634403810",
+                                order: "",
+                                type: "checkbox",
+                                label: "",
+                                name: "checkbox-1740634406622",
+                                length: 0,
+                                mandatory: false,
+                                notNullable: false,
+                                options: [],
+                                defaultValue: "",
+                                hidden: false,
+                                readOnly: false,
+                                unique: false,
+                                description: "",
+                                placeholder: ""
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    };
 
     const handleCreate = async () => {
         if (!formName) {
@@ -262,12 +340,32 @@ export const ModalContent1 = ({ closeModal }: { closeModal: () => void }) => {
             return;
         }
 
-        // Simpan data JSON ke database
-        await saveJsonToDatabase(formName, navigate);
+        // // Simpan data JSON ke database
+        // await saveJsonToDatabase(formName, navigate);
+
+        await store({data: jsonData});
 
         // Tutup modal
         closeModal();
     };
+
+    // status
+    useEffect(() => {
+        if (isSuccessStore) {
+            toast.success("Create Successfully")
+            navigate(`/builders/${dataStore.data.id}`);
+        }
+        if (errorStore) {
+            const errorData = errorStore as any;
+            if (errorData.data.errors) {
+                const newErrors: Record<string, string> = {};
+                Object.keys(errorData.data.errors).forEach((key) => {
+                    newErrors[key] = errorData.data.errors[key][0];
+                });
+                // setExternalErrors(newErrors);
+            }
+        }
+    }, [isSuccessStore, errorStore])
 
     return (
         <div>
