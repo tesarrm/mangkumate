@@ -268,7 +268,7 @@ export const ModalContent1 = ({ closeModal }: { closeModal: () => void }) => {
                                 columnId: "column-1",
                                 order: "",
                                 type: "input",
-                                label: "asdf",
+                                label: "",
                                 name: "input-1740634303844",
                                 length: 0,
                                 mandatory: false,
@@ -281,54 +281,54 @@ export const ModalContent1 = ({ closeModal }: { closeModal: () => void }) => {
                                 description: "",
                                 placeholder: ""
                             },
-                            {
-                                id: "textarea-1740634401968",
-                                sectionId: "section-1",
-                                columnId: "column-1",
-                                order: 1,
-                                type: "textarea",
-                                label: "",
-                                name: "textarea-1740634401968",
-                                length: 0,
-                                mandatory: false,
-                                notNullable: false,
-                                options: [],
-                                defaultValue: "",
-                                hidden: false,
-                                readOnly: false,
-                                unique: false,
-                                description: "",
-                                placeholder: ""
-                            }
+                            // {
+                            //     id: "textarea-1740634401968",
+                            //     sectionId: "section-1",
+                            //     columnId: "column-1",
+                            //     order: 1,
+                            //     type: "textarea",
+                            //     label: "",
+                            //     name: "textarea-1740634401968",
+                            //     length: 0,
+                            //     mandatory: false,
+                            //     notNullable: false,
+                            //     options: [],
+                            //     defaultValue: "",
+                            //     hidden: false,
+                            //     readOnly: false,
+                            //     unique: false,
+                            //     description: "",
+                            //     placeholder: ""
+                            // }
                         ]
                     },
-                    {
-                        id: "column-1740634403810",
-                        label: "",
-                        name: "",
-                        description: "",
-                        elements: [
-                            {
-                                id: "checkbox-1740634406622",
-                                sectionId: "section-1",
-                                columnId: "column-1740634403810",
-                                order: "",
-                                type: "checkbox",
-                                label: "",
-                                name: "checkbox-1740634406622",
-                                length: 0,
-                                mandatory: false,
-                                notNullable: false,
-                                options: [],
-                                defaultValue: "",
-                                hidden: false,
-                                readOnly: false,
-                                unique: false,
-                                description: "",
-                                placeholder: ""
-                            }
-                        ]
-                    }
+                    // {
+                    //     id: "column-1740634403810",
+                    //     label: "",
+                    //     name: "",
+                    //     description: "",
+                    //     elements: [
+                    //         {
+                    //             id: "checkbox-1740634406622",
+                    //             sectionId: "section-1",
+                    //             columnId: "column-1740634403810",
+                    //             order: "",
+                    //             type: "checkbox",
+                    //             label: "",
+                    //             name: "checkbox-1740634406622",
+                    //             length: 0,
+                    //             mandatory: false,
+                    //             notNullable: false,
+                    //             options: [],
+                    //             defaultValue: "",
+                    //             hidden: false,
+                    //             readOnly: false,
+                    //             unique: false,
+                    //             description: "",
+                    //             placeholder: ""
+                    //         }
+                    //     ]
+                    // }
                 ]
             }
         ]
