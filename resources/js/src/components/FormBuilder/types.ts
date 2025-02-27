@@ -42,6 +42,7 @@ export interface Column {
   label?: string; // Opsional
   name?: string; // Opsional (variable name)
   description?: string; // Opsional
+  elements?: FormElement[];
 }
 
 export interface Section {

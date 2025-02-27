@@ -32,20 +32,23 @@ interface ListProps {
     entity?: string;
     columns: Column[];
     customRenderRow?: (record: any) => React.ReactNode;
-    customActions?: React.ReactNode;
+    // customActions?: React.ReactNode;
+    CustomActions?: any;
     customFilters?: React.ReactNode;
     onRowClick?: (record: any) => void;
     fetchData?: (params: any) => Promise<any>;
+    toggleModal: any;
 }
 
 const List: React.FC<ListProps> = ({ 
     entity = entityUrl(), 
     columns, 
     customRenderRow,
-    customActions,
+    CustomActions,
     customFilters,
     onRowClick,
     fetchData,
+    toggleModal,
 }) => {
     const navigate = useNavigate();
     const [clickTimeout, setClickTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -153,7 +156,7 @@ const List: React.FC<ListProps> = ({
                 <Breadcrumb/>
 
                 <div className="flex flex-row items-center gap-3 w-auto">
-                    {customActions || (
+                    {CustomActions ? <CustomActions toggleModal={toggleModal} /> : (
                         <div className="flex items-center gap-2">
                             <Link to={`/${entity}/import`} className="btn btn-warning gap-2">
                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

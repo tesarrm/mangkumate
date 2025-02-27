@@ -20,6 +20,12 @@ const routes = [
         layout: 'default',
     },
 
+    {
+        path: '/builders/:form_name',
+        element: <App />,
+        layout: 'default',
+    },
+
     // Rute untuk setiap tabel
     {
         path: '/builders',
