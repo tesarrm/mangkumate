@@ -1,34 +1,16 @@
-import React, { useState } from 'react';
-import { useDrag } from 'react-dnd';
+import React from 'react';
 import { FormElement, TableColumn } from './types';
 
-interface FormElementProps {
+interface RenderElementProps {
     element: FormElement;
-    deleteElement: (elementId: string) => void;
-    duplicateElement: (elementId: string) => void;
-    onSelectElement: (element: FormElement) => void;
-    onSelectTableColumn: (elementId: string, columnIndex: number) => void; // Handler untuk memilih kolom tabel
-    handleUpdateTableColumn: any;
+    onSelectTableColumn: (elementId: string, columnIndex: number) => void;
+    handleUpdateTableColumn: (updatedElement: FormElement) => void;
 }
 
-export const FormElementComponent: React.FC<FormElementProps> = ({ 
-    element, 
-    deleteElement, 
-    duplicateElement, 
-    onSelectElement, 
-    onSelectTableColumn, 
-    handleUpdateTableColumn,
-}) => {
-    const [isHovered, setIsHovered] = useState(false);
-    const [, drag] = useDrag({
-        type: 'form-element',
-        item: { elementId: element.id },
-    });
-
-    let inputElement;
+export const renderFormElement = ({ element, onSelectTableColumn, handleUpdateTableColumn }: RenderElementProps) => {
     switch (element.type) {
         case 'input':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -51,7 +33,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'textarea':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -74,11 +56,11 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'button':
-            inputElement = <button className="btn btn-primary">{element.label || 'Button'}</button>;
+            return <button className="btn btn-primary">{element.label || 'Button'}</button>;
             break;
 
         case 'checkbox':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -97,7 +79,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'date':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -116,7 +98,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'datetime':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -136,7 +118,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
 
         case 'integer':
         case 'float':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -160,7 +142,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'long-text':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -183,7 +165,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'password':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -207,7 +189,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'small-text':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -231,7 +213,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'select':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -256,7 +238,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'time':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -275,7 +257,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'code':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -298,7 +280,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'color':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -317,7 +299,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'image':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -338,7 +320,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'markdown-editor':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -361,7 +343,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'text-editor':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -386,7 +368,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'link':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -410,7 +392,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
 
         case 'multiple-select':
         case 'multiple-select-link':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -435,7 +417,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         case 'table':
-            inputElement = (
+            return (
                 <div>
                     {element.label ? (
                         <label htmlFor="ctnEmail">
@@ -515,48 +497,8 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
                                             </div>
                                         </th>
                                     ))}
-
-                                    {/* Tombol untuk menambahkan kolom baru di akhir */}
-                                    {/* <th className="border px-4 py-2">
-                                        <button
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                const newColumn: TableColumn = {
-                                                    id: `column-${Date.now()}`,
-                                                    label: `Column ${(element.tableColumns?.length || 0) + 1}`,
-                                                    name: `column_${(element.tableColumns?.length || 0) + 1}`,
-                                                    type: 'text',
-                                                    mandatory: false,
-                                                };
-                                                const newColumns = [...(element.tableColumns || []), newColumn];
-                                                handleUpdateTableColumn({
-                                                    ...element,
-                                                    tableColumns: newColumns,
-                                                });
-                                            }}
-                                        >
-                                            <div className="mr-8">
-                                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M11 19L17 12L11 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                                    <path opacity="0.5" d="M6.99976 19L12.9998 12L6.99976 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                                                </svg>
-                                            </div>
-                                        </button>
-                                    </th> */}
                                 </tr>
                             </thead>
-                            {/* <tbody>
-                                {element.tableData?.map((row, rowIndex) => (
-                                    <tr key={rowIndex}>
-                                        {row.map((cell, cellIndex) => (
-                                            <td key={cellIndex} className="border px-4 py-2">
-                                                {cell}
-                                            </td>
-                                        ))}
-                                        <td className="border px-4 py-2"></td>
-                                    </tr>
-                                ))}
-                            </tbody> */}
                         </table>
                     </div>
 
@@ -570,58 +512,6 @@ export const FormElementComponent: React.FC<FormElementProps> = ({
             break;
 
         default:
-            inputElement = null;
+            return null;
     }
-
-    return (
-        <div
-            ref={drag}
-            className="relative"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-            onClick={(e) => {
-                e.stopPropagation(); // Hentikan event bubbling
-                onSelectElement(element);
-            }}
-        >
-            {inputElement}
-
-            {/* icon action */}
-            {isHovered && (
-                <div className="absolute top-8 right-2 flex gap-1">
-                    <button onClick={() => deleteElement(element.id)}>
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="18"
-                            height="18"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="1.5"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                        >
-                            <line x1="18" y1="6" x2="6" y2="18"></line>
-                            <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                    </button>
-                    <button onClick={() => duplicateElement(element.id)}>
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path
-                                d="M6 11C6 8.17157 6 6.75736 6.87868 5.87868C7.75736 5 9.17157 5 12 5H15C17.8284 5 19.2426 5 20.1213 5.87868C21 6.75736 21 8.17157 21 11V16C21 18.8284 21 20.2426 20.1213 21.1213C19.2426 22 17.8284 22 15 22H12C9.17157 22 7.75736 22 6.87868 21.1213C6 20.2426 6 18.8284 6 16V11Z"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                            />
-                            <path
-                                opacity="0.5"
-                                d="M6 19C4.34315 19 3 17.6569 3 16V10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H15C16.6569 2 18 3.34315 18 5"
-                                stroke="currentColor"
-                                strokeWidth="1.5"
-                            />
-                        </svg>
-                    </button>
-                </div>
-            )}
-        </div>
-    );
-};
+}

@@ -1,5 +1,6 @@
 import React from 'react';
 import { lazy } from 'react';
+import MyForm from '../pages/Product/Form';
 
 const App = lazy(() => import('../components/FormBuilder/App'));
 const BuilderList = lazy(() => import('../pages/Builder/BuilderList'));
@@ -35,6 +36,11 @@ const routes = [
     {
         path: '/products',
         element: <ProductList />,
+        layout: 'default',
+    },
+    {
+        path: '/products/create',
+        element: <MyForm />,
         layout: 'default',
     },
 ];

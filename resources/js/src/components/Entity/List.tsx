@@ -1,5 +1,5 @@
 import React, { useCallback, useState, useEffect } from "react";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DataTable } from 'mantine-datatable';
 import { useSelector } from 'react-redux';
 import { IRootState } from '../../store';

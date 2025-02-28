@@ -142,3 +142,43 @@ export const entityUrl = () => {
 
     return entity;
 }
+
+/**
+ * Mengubah kata tunggal menjadi bentuk plural.
+ * @param {string} word - Kata yang akan diubah.
+ * @returns {string} - Kata dalam bentuk plural.
+ */
+export const toPlural = (word) => {
+    // Aturan dasar untuk mengubah kata menjadi plural
+    const pluralRules = [
+        { pattern: /(s|sh|ch|x|z)$/i, replace: '$1es' }, // Kata yang berakhiran s, sh, ch, x, z
+        { pattern: /([^aeiou])y$/i, replace: '$1ies' }, // Kata yang berakhiran y dan didahului oleh konsonan
+        { pattern: /(f|fe)$/i, replace: 'ves' }, // Kata yang berakhiran f atau fe
+        { pattern: /(o)$/i, replace: '$1es' }, // Kata yang berakhiran o
+    ];
+
+    // Cek aturan plural
+    for (const rule of pluralRules) {
+        if (rule.pattern.test(word)) {
+            return word.replace(rule.pattern, rule.replace);
+        }
+    }
+
+    // Default: tambahkan 's' di akhir kata
+    return word + 's';
+}
+
+/**
+ * Mengubah kata atau kalimat menjadi format slug.
+ * @param {string} text - Teks yang akan diubah.
+ * @returns {string} - Teks dalam format slug.
+ */
+export const toSlug = (text) => {
+    return text
+        .toLowerCase() // Ubah ke huruf kecil
+        .replace(/\s+/g, '-') // Ganti spasi dengan tanda hubung (-)
+        .replace(/[^\w\-]+/g, '') // Hapus karakter non-alphanumeric (kecuali tanda hubung)
+        .replace(/\-\-+/g, '-') // Ganti multiple tanda hubung dengan satu tanda hubung
+        .replace(/^-+/, '') // Hapus tanda hubung di awal
+        .replace(/-+$/, ''); // Hapus tanda hubung di akhir
+}

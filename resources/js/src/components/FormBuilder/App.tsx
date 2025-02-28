@@ -1,17 +1,15 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import { FormArea } from './FormArea';
 import { PropertiesSidebar } from './PropertiesSidebar';
 import { useFormBuilder } from './useFormBuilder';
-import { useGetSingleBuilderQuery } from '../../redux/builder/builderApi';
 import { useParams } from 'react-router-dom';
 import { Column, Section } from './types';
 import { useCrudApi } from '../../redux/api/useCrudApi';
 
 const App: React.FC = () => {
     const { form_name } = useParams();
-    // const { data } = useGetSingleBuilderQuery(form_name, { skip: !form_name });
     const { 
         useGetSingleDataQuery, 
         useUpdateDataMutation,
@@ -64,33 +62,6 @@ const App: React.FC = () => {
         handleAddElement,
         handleUpdateTableColumn,
     } = useFormBuilder({ formName, sections: parsedSections, elements: initialElements });
-
-    const updateJsonData = async (formName: string, sections: any[]) => {
-        try {
-            const response = await fetch(`http://localhost:8000/api/tablejson/${formName}`, {
-                method: 'PATCH', // atau 'PATCH'
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    formName,
-                    sections,
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to update data.');
-            }
-
-            const result = await response.json();
-            console.log('Data updated successfully:', result);
-            return result;
-        } catch (error) {
-            console.error('Error updating data:', error);
-            throw error;
-        }
-    };
-
     const handleUpdate = async () => {
         const formJson = generateFormJson(); // Generate JSON dari form builder
         const requestData = {
@@ -99,14 +70,6 @@ const App: React.FC = () => {
         };
 
         await update({ id: form_name, data: requestData});
-
-        // try {
-        //     await updateJsonData(formJson.formName, formJson.sections);
-        //     alert('Data updated successfully!');
-        // } catch (error) {
-        //     alert('Failed to update data. Please try again.');
-        // }
-
     };
 
 

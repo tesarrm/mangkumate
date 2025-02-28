@@ -270,19 +270,6 @@ const GenericForm = ({
                 return (
                     <div key={field.name} className={`${errors[field.name] && touched[field.name] && "has-error"}`}>
                         <label htmlFor={field.name}>{field.label}{field.required && <span className="text-danger">*</span>}</label>
-                        {/* <select
-                            id={field.name}
-                            className="form-select text-white-dark"
-                            value={values[field.name]}
-                            onChange={handleChange}
-                        >
-                            <option value="">Choose...</option>
-                            {field.options?.map((option) => (
-                                <option key={option.value} value={option.value}>
-                                    {option.label}
-                                </option>
-                            ))}
-                        </select> */}
                         <Select
                             id={field.name}
                             placeholder="Select an option"

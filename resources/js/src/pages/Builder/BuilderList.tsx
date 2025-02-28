@@ -7,7 +7,7 @@ const defaultColumns = [
     { accessor: 'no', title: 'No', sortable: false, hidden: false },
     { accessor: 'id', title: 'Entity Name', sortable: true, hidden: false },
     { accessor: 'created_at', title: 'Created At', sortable: true, hidden: false },
-    { accessor: 'updated_at', title: 'Updated At', sortable: true, hidden: false }
+    { accessor: 'updated_at', title: 'Updated At', sortable: true, hidden: false },
 ];
 
 const BuilderList = () => {
@@ -53,9 +53,9 @@ const BuilderList = () => {
     return (
         <div>
             {/* Tombol kustom */}
-            <div className="mb-5 flex items-center justify-center gap-2">
+            {/* <div className="mb-5 flex items-center justify-center gap-2">
                 {CustomButtons && <CustomButtons toggleModal={toggleModal} />}
-            </div>
+            </div> */}
 
             {/* Render modal kustom */}
             {customModals.map((modal: any) => (
