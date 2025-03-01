@@ -472,7 +472,7 @@ const customConfig = {
             hidden: false,
             render: (record: any) => (
                 <button
-                    onClick={() => window.location.href = `/${toSlug(toPlural(record.id))}`}
+                    onClick={() => window.location.href = `/${record.id}`}
                     type="button"
                 >
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

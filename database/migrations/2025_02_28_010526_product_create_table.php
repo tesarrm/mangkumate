@@ -18,7 +18,6 @@ return new class extends Migration
             $table->text('code-1740703640069');
             $table->string('color-1740703644650');
             $table->string('image-1740703648951');
-            $table->text('markdown-editor-1740703656177');
             $table->string('name')->nullable(false);
             $table->text('textarea-1740703583590');
             $table->boolean('checkbox-1740703589387');
@@ -28,6 +27,7 @@ return new class extends Migration
             $table->time('time-1740703636782');
             $table->text('text-editor-1740703660481');
             $table->string('multiple-select-1740703664854');
+            $table->text('markdown-editor-1740703656177');
             $table->string('button-1740703586099');
             $table->timestamps();
         });

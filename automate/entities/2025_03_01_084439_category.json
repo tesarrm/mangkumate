@@ -1,5 +1,5 @@
 {
-    "formName": "Berat",
+    "formName": "Category",
     "sections": [
         {
             "id": "section-1",
@@ -19,8 +19,8 @@
                             "columnId": "column-1",
                             "order": null,
                             "type": "input",
-                            "label": null,
-                            "name": "input-1740634303844",
+                            "label": "Name",
+                            "name": "name",
                             "length": 0,
                             "mandatory": false,
                             "notNullable": false,
@@ -29,26 +29,7 @@
                             "hidden": false,
                             "readOnly": false,
                             "unique": false,
-                            "description": null,
-                            "placeholder": null
-                        },
-                        {
-                            "id": "button-1740656882843",
-                            "sectionId": "section-1",
-                            "columnId": "column-1",
-                            "order": 1,
-                            "type": "button",
-                            "label": null,
-                            "name": "button-1740656882843",
-                            "length": 0,
-                            "mandatory": false,
-                            "notNullable": false,
-                            "options": [],
-                            "defaultValue": null,
-                            "hidden": false,
-                            "readOnly": false,
-                            "unique": false,
-                            "description": null,
+                            "description": "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
                             "placeholder": null
                         }
                     ]

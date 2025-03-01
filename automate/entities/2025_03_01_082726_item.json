@@ -1,0 +1,78 @@
+{
+    "formName": "Item",
+    "sections": [
+        {
+            "id": "section-1",
+            "label": null,
+            "name": "section_1",
+            "description": "This is section 1",
+            "columns": [
+                {
+                    "id": "column-1",
+                    "label": null,
+                    "name": "column_1",
+                    "description": "This is column 1",
+                    "elements": [
+                        {
+                            "id": "input-1740634303844",
+                            "sectionId": "section-1",
+                            "columnId": "column-1",
+                            "order": null,
+                            "type": "input",
+                            "label": "Name",
+                            "name": "Name",
+                            "length": 0,
+                            "mandatory": false,
+                            "notNullable": false,
+                            "options": [],
+                            "defaultValue": null,
+                            "hidden": false,
+                            "readOnly": false,
+                            "unique": false,
+                            "description": null,
+                            "placeholder": null
+                        },
+                        {
+                            "id": "integer-1740817659684",
+                            "sectionId": "section-1",
+                            "columnId": "column-1",
+                            "order": 1,
+                            "type": "integer",
+                            "label": "Qty",
+                            "name": "qty",
+                            "length": 0,
+                            "mandatory": false,
+                            "notNullable": false,
+                            "options": [],
+                            "defaultValue": null,
+                            "hidden": false,
+                            "readOnly": false,
+                            "unique": false,
+                            "description": null,
+                            "placeholder": null
+                        },
+                        {
+                            "id": "date-1740817676010",
+                            "sectionId": "section-1",
+                            "columnId": "column-1",
+                            "order": 2,
+                            "type": "date",
+                            "label": "Buy Date",
+                            "name": "buy_date",
+                            "length": 0,
+                            "mandatory": false,
+                            "notNullable": false,
+                            "options": [],
+                            "defaultValue": null,
+                            "hidden": false,
+                            "readOnly": false,
+                            "unique": false,
+                            "description": null,
+                            "placeholder": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

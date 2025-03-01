@@ -157,21 +157,6 @@ const List: React.FC<ListProps> = ({
 
                 <div className="flex flex-row items-center gap-3 w-auto">
                     {CustomActions ? <CustomActions toggleModal={toggleModal} /> : (
-                        // <div className="flex items-center gap-2">
-                        //     <Link to={`/${entity}/import`} className="btn btn-warning gap-2">
-                        //         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        //             <path opacity="0.5" d="M3 15C3 17.8284 3 19.2426 3.87868 20.1213C4.75736 21 6.17157 21 9 21H15C17.8284 21 19.2426 21 20.1213 20.1213C21 19.2426 21 17.8284 21 15" 
-                        //                 stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        //             <path d="M12 3V16M12 16L16 11.625M12 16L8 11.625" 
-                        //                 stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        //         </svg>
-                        //         <span className="hidden sm:inline">Import</span>
-                        //     </Link>
-                        //     <Link to={`/${entity}/create`} className="btn btn-primary gap-2">
-                        //         <IconPlus />
-                        //         <span className="hidden sm:inline">Create</span>
-                        //     </Link>
-                        // </div>
                         <div className="relative">
                             {selectedRecords?.length !== 0 ? (
                                 <div className="flex items-center justify-center">

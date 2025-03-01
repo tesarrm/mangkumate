@@ -51,9 +51,6 @@ foreach ($jsonFiles as $jsonFile) {
 
     // Generate migration
     $migrationContent = generateMigrationContent($tableName, $columns);
-    // $migrationFile = "../database/migrations/create_{$tableName}_table.php";
-    // $migrationFile = "../database/migrations/{$jsonFile}_create_table.php";
-    // Hapus ekstensi .json dari $jsonFile
     $jsonFileName = pathinfo($jsonFile, PATHINFO_FILENAME);
 
     // Simpan sebagai migration file
@@ -88,14 +85,14 @@ foreach ($jsonFiles as $jsonFile) {
     file_put_contents($listTsxFile, $listTsxContent); // Timpa file yang sudah ada
     echo "List.tsx file created/updated: {$listTsxFile}\n";
 
-    // // Generate List.tsx
-    // $listTsxContent = generateListTsxContent($tableName, $columns);
-    // $listTsxFile = "../resources/js/src/pages/{$modelName}/List.tsx";
-    // if (!is_dir(dirname($listTsxFile))) {
-    //     mkdir(dirname($listTsxFile), 0777, true); // Buat folder jika belum ada
-    // }
-    // file_put_contents($listTsxFile, $listTsxContent); // Timpa file yang sudah ada
-    // echo "List.tsx file created/updated: {$listTsxFile}\n";
+    // Generate Form.tsx
+    $listTsxContent = generateFormTsxContent($tableName, $columns);
+    $listTsxFile = "../resources/js/src/pages/{$modelName}/Form.tsx";
+    if (!is_dir(dirname($listTsxFile))) {
+        mkdir(dirname($listTsxFile), 0777, true); // Buat folder jika belum ada
+    }
+    file_put_contents($listTsxFile, $listTsxContent); // Timpa file yang sudah ada
+    echo "List.tsx file created/updated: {$listTsxFile}\n";
 
     // // Tambahkan rute ke routes.tsx
     // addRouteToRoutesTsx($tableName);
@@ -348,7 +345,7 @@ function generateRoutesContent($tableName) {
     $pluralTableName = Str::plural($tableName);
     $modelName = ucfirst($tableName);
     return <<<EOT
-Route::apiResource('{$pluralTableName}', \\App\\Http\\Controllers\\{$modelName}Controller::class);
+Route::apiResource('{$modelName}', \\App\\Http\\Controllers\\{$modelName}Controller::class);
 EOT . PHP_EOL;
 }
 
@@ -401,6 +398,30 @@ EOT;
     return $stub;
 }
 
+
+function generateFormTsxContent($tableName, $columns) {
+    $modelName = ucfirst($tableName);
+   
+    $stub = <<<EOT
+import React from 'react';
+import FormBuilderForm from "../../components/Entity/Form/FormBuilderForm";
+import { entityUrl } from '../../components/tools';
+import { useGetSingleDataBuilderQuery } from '../../redux/api/testApi';
+
+const {$modelName}Form = () => {
+    const form_name = entityUrl()
+    const { data: dataForm } = useGetSingleDataBuilderQuery({ id: form_name }, { skip: !form_name });
+    const parsedSections = dataForm?.sections ? JSON.parse(dataForm.sections) : [];
+
+    return <FormBuilderForm sections={parsedSections} />;
+};
+
+export default {$modelName}Form;
+
+EOT;
+    return $stub;
+}
+
 function generateRoutesTsxContent($jsonFiles) {
     $imports = [];
     $routes = [];
@@ -422,11 +443,22 @@ function generateRoutesTsxContent($jsonFiles) {
 
         // Tambahkan import untuk komponen List
         $imports[] = "const {$modelName}List = lazy(() => import('../pages/{$modelName}/List'));";
+        $imports[] = "const {$modelName}Form = lazy(() => import('../pages/{$modelName}/Form'));";
 
         // Tambahkan rute untuk tabel ini
         $routes[] = "    {
         path: '/{$modelName}',
         element: <{$modelName}List />,
+        layout: 'default',
+    },";
+        $routes[] = "    {
+        path: '/{$modelName}/create',
+        element: <{$modelName}Form />,
+        layout: 'default',
+    },";
+        $routes[] = "    {
+        path: '/{$modelName}/:id',
+        element: <{$modelName}Form />,
         layout: 'default',
     },";
     }

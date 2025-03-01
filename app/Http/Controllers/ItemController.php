@@ -3,14 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\BaseController;
-use App\Models\Category;
+use App\Models\Item;
 
-class CategoryController extends BaseController
+class ItemController extends BaseController
 {
     protected $model;
-    protected $table = 'categories';
+    protected $table = 'items';
 
-    public function __construct(Category $model)
+    public function __construct(Item $model)
     {
         parent::__construct($model, $this->table, [], [], []);
     }
@@ -18,7 +18,9 @@ class CategoryController extends BaseController
     protected function getValidationRules($id = null)
     {
         $rules = [
-            'name' => 'nullable|string|max:255',
+            'Name' => 'nullable|string|max:255',
+            'qty' => 'nullable|integer',
+            'buy_date' => 'nullable|date',
         ];
 
         return $rules;

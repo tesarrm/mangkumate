@@ -26,7 +26,6 @@ class ProductController extends BaseController
             'code-1740703640069' => 'nullable|string',
             'color-1740703644650' => 'nullable|string|max:255',
             'image-1740703648951' => 'nullable|string|max:255',
-            'markdown-editor-1740703656177' => 'nullable|string',
             'name' => 'nullable|string|max:255',
             'textarea-1740703583590' => 'nullable|string',
             'checkbox-1740703589387' => 'boolean',
@@ -36,6 +35,7 @@ class ProductController extends BaseController
             'time-1740703636782' => 'nullable|string',
             'text-editor-1740703660481' => 'nullable|string',
             'multiple-select-1740703664854' => 'nullable|string|max:255',
+            'markdown-editor-1740703656177' => 'nullable|string',
             'button-1740703586099' => 'nullable|string|max:255',
         ];
 
