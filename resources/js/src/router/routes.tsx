@@ -49,6 +49,11 @@ const routes = [
         element: <MyForm/>,
         layout: 'default',
     },
+    {
+        path: '/Product/:id',
+        element: <MyForm/>,
+        layout: 'default',
+    },
 ];
 
 export { routes };

@@ -6,18 +6,24 @@ import toast from 'react-hot-toast';
 import { Section } from '../../FormBuilder/types';
 import { useCrudApi } from '../../../redux/api/useCrudApi';
 import { FormElementComponent } from './FormElementComponent';
+import Breadcrumb from '../../Breadcumb';
+import { entityUrl } from '../../tools';
 
 interface FormBuilderFormProps {
-    entity: string;
+    entity?: string;
     sections: Section[];
 }
 
-const FormBuilderForm: React.FC<FormBuilderFormProps> = ({ entity, sections }) => {
-    const { useGetSingleDataQuery, useStoreDataMutation, useUpdateDataMutation } = useCrudApi(entity);
+const FormBuilderForm: React.FC<FormBuilderFormProps> = ({ entity = entityUrl(), sections }) => {
+    const { 
+        useGetSingleDataQuery, 
+        useStoreDataMutation, 
+        useUpdateDataMutation 
+    } = useCrudApi(entity);
     const navigate = useNavigate();
     const { id } = useParams();
     const { data } = useGetSingleDataQuery({ id }, { skip: !id });
-    const [store, { isSuccess: isSuccessStore, error: errorStore }] = useStoreDataMutation();
+    const [store, { data: dataStore, isSuccess: isSuccessStore, error: errorStore }] = useStoreDataMutation();
     const [update, { isSuccess: isSuccessUpdate, error: errorUpdate }] = useUpdateDataMutation();
     const [initialValues, setInitialValues] = useState<Record<string, any>>({});
 
@@ -71,6 +77,8 @@ const FormBuilderForm: React.FC<FormBuilderFormProps> = ({ entity, sections }) =
             } else {
                 await store({ data: formData });
             }
+
+            // const data = JSON.stringify(values); // Kirim data sebagai JSON
         },
     });
 
@@ -78,7 +86,7 @@ const FormBuilderForm: React.FC<FormBuilderFormProps> = ({ entity, sections }) =
     useEffect(() => {
         if (isSuccessStore) {
             toast.success('Data created successfully');
-            navigate(`/${entity}`);
+            navigate(`/${entity}/${dataStore?.data.id}`);
         }
         if (isSuccessUpdate) {
             toast.success('Data updated successfully');
@@ -95,10 +103,31 @@ const FormBuilderForm: React.FC<FormBuilderFormProps> = ({ entity, sections }) =
         }
     }, [isSuccessStore, isSuccessUpdate, errorStore, errorUpdate]);
 
+    // scroll
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 20); // Aktif jika scroll lebih dari 20px
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
+
     return (
         <form onSubmit={formik.handleSubmit}>
-            <div className="panel">
+            <div className={`sticky top-14 z-10 flex items-center justify-between gap-4 mb-5 transition-all duration-300 ${isScrolled ? "bg-white shadow-sm mx-[-1.50rem] px-6 py-4" : ""}`}>
+                <Breadcrumb />
 
+                <div className="flex items-center gap-2">
+                    <button type="submit" className="btn btn-primary">
+                        {id ? 'Update' : 'Save'}
+                    </button>
+                </div>
+            </div>
+
+            <div className="panel">
                 {/* section */}
                 {sections.map((section, sectionIndex) => (
                     // section item
@@ -133,11 +162,11 @@ const FormBuilderForm: React.FC<FormBuilderFormProps> = ({ entity, sections }) =
                 ))}
             </div>
 
-            <div className="flex justify-end mt-5">
+            {/* <div className="flex justify-end mt-5">
                 <button type="submit" className="btn btn-primary">
                     {id ? 'Update' : 'Save'}
                 </button>
-            </div>
+            </div> */}
         </form>
     );
 };

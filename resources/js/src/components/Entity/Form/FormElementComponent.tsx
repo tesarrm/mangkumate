@@ -74,7 +74,75 @@ export const FormElementComponent: React.FC<FormElementProps> = ({ element, valu
                 </div>
             );
 
+        // case 'checkbox':
+        //     return (
+        //         <div>
+        //             <label htmlFor={element.name}>
+        //                 <input
+        //                     id={element.name}
+        //                     type="checkbox"
+        //                     name={element.name}
+        //                     checked={value || false}
+        //                     onChange={onChange}
+        //                     onBlur={onBlur}
+        //                     className="form-checkbox"
+        //                 />
+        //                 {element.label}
+        //             </label>
+        //             {error && <span className="text-red-500">{error}</span>}
+        //             {element.description && <span className="ml-1 text-white-dark text-xs">{element.description}</span>}
+        //         </div>
+        //     );
+
+        // case 'checkbox':
+        //     const isChecked = value !== undefined ? value : false; // Nilai default jika undefined
+        //     return (
+        //         <div>
+        //             <label htmlFor={element.name}>
+        //                 <input
+        //                     id={element.name}
+        //                     type="checkbox"
+        //                     name={element.name}
+        //                     checked={isChecked}
+        //                     onChange={onChange}
+        //                     onBlur={onBlur}
+        //                     className="form-checkbox"
+        //                 />
+        //                 {element.label}
+        //             </label>
+        //             {error && <span className="text-red-500">{error}</span>}
+        //         </div>
+        //     );
+
+        // case 'checkbox':
+        //     const isChecked = value !== undefined ? Boolean(value) : false; // Pastikan nilai boolean
+        //     return (
+        //         <div>
+        //             <label htmlFor={element.name}>
+        //                 <input
+        //                     id={element.name}
+        //                     type="checkbox"
+        //                     name={element.name}
+        //                     checked={isChecked}
+        //                     onChange={(e) =>
+        //                         onChange({
+        //                             target: {
+        //                                 name: element.name,
+        //                                 value: e.target.checked, // Kirim nilai boolean
+        //                             },
+        //                         })
+        //                     }
+        //                     onBlur={onBlur}
+        //                     className="form-checkbox"
+        //                 />
+        //                 {element.label}
+        //             </label>
+        //             {error && <span className="text-red-500">{error}</span>}
+        //         </div>
+        //     );
+
         case 'checkbox':
+            const isChecked = value !== undefined ? Boolean(value) : false; // Pastikan nilai boolean
             return (
                 <div>
                     <label htmlFor={element.name}>
@@ -82,15 +150,21 @@ export const FormElementComponent: React.FC<FormElementProps> = ({ element, valu
                             id={element.name}
                             type="checkbox"
                             name={element.name}
-                            checked={value}
-                            onChange={onChange}
+                            checked={isChecked}
+                            onChange={(e) =>
+                                onChange({
+                                    target: {
+                                        name: element.name,
+                                        value: e.target.checked ? 1 : 0, // Kirim 1 atau 0
+                                    },
+                                })
+                            }
                             onBlur={onBlur}
                             className="form-checkbox"
                         />
                         {element.label}
                     </label>
                     {error && <span className="text-red-500">{error}</span>}
-                    {element.description && <span className="ml-1 text-white-dark text-xs">{element.description}</span>}
                 </div>
             );
 
@@ -355,6 +429,8 @@ export const FormElementComponent: React.FC<FormElementProps> = ({ element, valu
             );
 
         case 'color':
+            const colorValue = value || '#000000'; // Nilai default jika kosong
+
             return (
                 <div>
                     {/* <label htmlFor={element.name}>{element.label}</label> */}
@@ -364,7 +440,7 @@ export const FormElementComponent: React.FC<FormElementProps> = ({ element, valu
                             {element.mandatory && <span className="text-danger">*</span>}
                         </label>
                     )}
-                    <input
+                    {/* <input
                         id={element.name}
                         type="color"
                         name={element.name}
@@ -373,6 +449,15 @@ export const FormElementComponent: React.FC<FormElementProps> = ({ element, valu
                         onBlur={onBlur}
                         className="form-input"
                         placeholder={element.placeholder || ''}
+                    /> */}
+                    <input
+                        id={element.name}
+                        type="color"
+                        name={element.name}
+                        value={colorValue} // Pastikan nilai selalu terdefinisi dan valid
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        className="form-input"
                     />
                     {error && <span className="text-red-500">{error}</span>}
                     {element.description && <span className="ml-1 text-white-dark text-xs">{element.description}</span>}
@@ -539,79 +624,79 @@ export const FormElementComponent: React.FC<FormElementProps> = ({ element, valu
         //         </div>
         //     );
 
-case 'text-editor':
-    return (
-        <div>
-            {/* Label dengan penanda mandatory */}
-            {element.label && (
-                <label htmlFor={element.name}>
-                    {element.label}
-                    {element.mandatory && <span className="text-danger">*</span>}
-                </label>
-            )}
+        case 'text-editor':
+            return (
+                <div>
+                    {/* Label dengan penanda mandatory */}
+                    {element.label && (
+                        <label htmlFor={element.name}>
+                            {element.label}
+                            {element.mandatory && <span className="text-danger">*</span>}
+                        </label>
+                    )}
 
-            {/* Quill Editor */}
-            <ReactQuill
-                theme="snow"
-                value={value}
-                onChange={(content) =>
-                    onChange({
-                        target: {
-                            name: element.name,
-                            value: content,
-                        },
-                    })
-                }
-                modules={{
-                    toolbar: [
-                        [{ header: [1, 2, 3, 4, 5, 6, false] }], // Header dropdown
-                        ['bold', 'italic', 'underline', 'strike'], // Format teks
-                        [{ list: 'ordered' }, { list: 'bullet' }], // Daftar
-                        [{ script: 'sub' }, { script: 'super' }], // Subscript/Superscript
-                        [{ indent: '-1' }, { indent: '+1' }], // Indentasi
-                        [{ direction: 'rtl' }], // Arah teks
-                        [{ color: [] }, { background: [] }], // Warna teks dan latar belakang
-                        [{ font: [] }], // Font family
-                        [{ align: [] }], // Alignment
-                        ['link', 'image', 'video'], // Link, gambar, dan video
-                        ['clean'], // Hapus formatting
-                    ],
-                }}
-                formats={[
-                    'header',
-                    'bold',
-                    'italic',
-                    'underline',
-                    'strike',
-                    'list',
-                    'bullet',
-                    'indent',
-                    'script',
-                    'direction',
-                    'color',
-                    'background',
-                    'font',
-                    'align',
-                    'link',
-                    'image',
-                    'video',
-                    'clean',
-                ]}
-                placeholder={element.placeholder || 'Enter text here...'}
-                // className="form-textarea"
-            />
+                    {/* Quill Editor */}
+                    <ReactQuill
+                        theme="snow"
+                        value={value}
+                        onChange={(content) =>
+                            onChange({
+                                target: {
+                                    name: element.name,
+                                    value: content,
+                                },
+                            })
+                        }
+                        modules={{
+                            toolbar: [
+                                [{ header: [1, 2, 3, 4, 5, 6, false] }], // Header dropdown
+                                ['bold', 'italic', 'underline', 'strike'], // Format teks
+                                [{ list: 'ordered' }, { list: 'bullet' }], // Daftar
+                                [{ script: 'sub' }, { script: 'super' }], // Subscript/Superscript
+                                [{ indent: '-1' }, { indent: '+1' }], // Indentasi
+                                [{ direction: 'rtl' }], // Arah teks
+                                [{ color: [] }, { background: [] }], // Warna teks dan latar belakang
+                                [{ font: [] }], // Font family
+                                [{ align: [] }], // Alignment
+                                ['link', 'image', 'video'], // Link, gambar, dan video
+                                ['clean'], // Hapus formatting
+                            ],
+                        }}
+                        formats={[
+                            'header',
+                            'bold',
+                            'italic',
+                            'underline',
+                            'strike',
+                            'list',
+                            'bullet',
+                            'indent',
+                            'script',
+                            'direction',
+                            'color',
+                            'background',
+                            'font',
+                            'align',
+                            'link',
+                            'image',
+                            'video',
+                            'clean',
+                        ]}
+                        placeholder={element.placeholder || 'Enter text here...'}
+                        // className="form-textarea"
+                    />
 
-            {/* Pesan error */}
-            {error && <span className="text-red-500">{error}</span>}
+                    {/* Pesan error */}
+                    {error && <span className="text-red-500">{error}</span>}
 
-            {/* Deskripsi */}
-            {element.description && (
-                <span className="ml-1 text-white-dark text-xs">
-                    {element.description}
-                </span>
-            )}
-        </div>
-    );
+                    {/* Deskripsi */}
+                    {element.description && (
+                        <span className="ml-1 text-white-dark text-xs">
+                            {element.description}
+                        </span>
+                    )}
+                </div>
+            );
 
         case 'link':
             return (
