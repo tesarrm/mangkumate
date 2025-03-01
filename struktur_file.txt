@@ -1,0 +1,50 @@
+# MANGKUMATE
+
+## Technologies
+- Laravel Vite
+- Reactjs
+
+## Struktur folder
+automate/
+    entities/
+        ...json
+        ...json
+        ...
+    automate.php
+resources/
+    js/
+        src/
+            pages/
+                [EntityName]/
+                    [EntityName]List.tsx
+                    [EntityName]Form.tsx
+                [EntityName]/
+                ...
+            components/
+                FormBuilder/
+                    App.tsx
+                    FromArea.tsx
+                    PropertiesSidebar.tsx
+                    ColumnComponent.tsx
+                    FormElementComponent.tsx
+                    renderFormElement.tsx
+                Entity/
+                    Export/  
+                    Import/
+                    Form.tsx
+                    List.tsx
+            router/
+                index.tsx
+                routes.tsx
+
+## Process to generate CRUD
+1. Make schema via form builder
+2. Run `php automate.php`
+3. Run `php artisan migrate`
+4. If need to rollback database
+    - Save the data table builders
+    - Rollback the database
+    - Import the data table builders
+
+run `php artisan migrate:fresh`
+run `php artisan migrate:update`
