@@ -7,6 +7,7 @@ const BuilderList = lazy(() => import('../pages/Builder/BuilderList'));
 
 const Index = lazy(() => import('../pages/Index'));
 const BeratList = lazy(() => import('../pages/Berat/List'));
+const CategoryList = lazy(() => import('../pages/Category/List'));
 const ProductList = lazy(() => import('../pages/Product/List'));
 
 const routes = [
@@ -29,18 +30,23 @@ const routes = [
 
     // Rute untuk setiap tabel
     {
-        path: '/berats',
+        path: '/Berat',
         element: <BeratList />,
         layout: 'default',
     },
     {
-        path: '/products',
+        path: '/Category',
+        element: <CategoryList />,
+        layout: 'default',
+    },
+    {
+        path: '/Product',
         element: <ProductList />,
         layout: 'default',
     },
     {
-        path: '/products/create',
-        element: <MyForm />,
+        path: '/Product/create',
+        element: <MyForm/>,
         layout: 'default',
     },
 ];

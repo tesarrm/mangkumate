@@ -98,12 +98,24 @@ const FormBuilderForm: React.FC<FormBuilderFormProps> = ({ entity, sections }) =
     return (
         <form onSubmit={formik.handleSubmit}>
             <div className="panel">
+
+                {/* section */}
                 {sections.map((section, sectionIndex) => (
-                    <div key={sectionIndex} className="mb-8">
+                    // section item
+                    <div key={sectionIndex} 
+                    // className="mb-8"
+                    // className={`mb-8 ${sectionIndex !== 0 && 'pt-4 border-t'}`}
+                    className={`mb-8 relative ${sectionIndex !== 0 ? 'pt-4 before:absolute before:top-0 before:left-[-1.25rem] before:right-[-1.25rem] before:h-[1px] before:bg-[#e5e7eb]' : ''}`}
+                    >
                         <h3 className="text-lg font-semibold mb-4">{section.label || `Section ${sectionIndex + 1}`}</h3>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
+
+                        {/* column */}
+                        <div className={`grid grid-cols-1 sm:grid-cols-${section.columns.length} gap-8`}>
                             {section.columns.map((column, columnIndex) => (
+                                // column item
                                 <div key={columnIndex} className="space-y-5">
+
+                                    {/* form element */}
                                     {column.elements.map((element) => (
                                         <FormElementComponent
                                             key={element.id}

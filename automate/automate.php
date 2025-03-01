@@ -167,49 +167,7 @@ EOT;
     return str_replace('{columns}', implode("\n            ", $columns), $stub);
 }
 
-// function generateControllerContent($tableName) {
-//     $modelName = ucfirst($tableName);
-//     $stub = <<<EOT
-// <?php
 
-// namespace App\Http\Controllers;
-
-// use App\Models\\{$modelName};
-// use Illuminate\Http\Request;
-
-// class {$modelName}Controller extends Controller
-// {
-//     public function index()
-//     {
-//         return {$modelName}::all();
-//     }
-
-//     public function store(Request \$request)
-//     {
-//         return {$modelName}::create(\$request->all());
-//     }
-
-//     public function show({$modelName} \${$tableName})
-//     {
-//         return \${$tableName};
-//     }
-
-//     public function update(Request \$request, {$modelName} \${$tableName})
-//     {
-//         \${$tableName}->update(\$request->all());
-//         return \${$tableName};
-//     }
-
-//     public function destroy({$modelName} \${$tableName})
-//     {
-//         \${$tableName}->delete();
-//         return response()->noContent();
-//     }
-// }
-// EOT;
-
-//     return $stub;
-// }
 
 function generateControllerContent($tableName, $columns) {
     $modelName = ucfirst($tableName);
@@ -407,7 +365,8 @@ function generateListTsxContent($tableName, $columns) {
     $columnsList[] = "{ accessor: 'no', title: 'No', sortable: false, hidden: false }";
 
     foreach ($columns as $column) {
-        preg_match("/'\w+'/", $column, $matches);
+        // preg_match("/'\w+'/", $column, $matches);
+        preg_match("/'([\w-]+)'/", $column, $matches);
         if (!empty($matches)) {
             $columnName = trim($matches[0], "'"); // Ambil nama kolom
             $columnTitle = ucwords(str_replace('_', ' ', $columnName)); // Format judul kolom
@@ -442,52 +401,6 @@ EOT;
     return $stub;
 }
 
-// function addRouteToRoutesTsx($tableName) {
-//     $modelName = ucfirst($tableName);
-//     $pluralTableName = Str::plural($tableName);
-
-//     // Path ke file routes.tsx
-//     $routesFile = "../resources/js/src/router/routes.tsx";
-
-//     // Baca isi file routes.tsx
-//     $routesContent = file_get_contents($routesFile);
-
-//     // Cari posisi terakhir dari array `routes`
-//     $lastRoutePosition = strrpos($routesContent, '},');
-
-//     // Jika tidak ditemukan, cari posisi terakhir dari array `routes` tanpa koma
-//     if ($lastRoutePosition === false) {
-//         $lastRoutePosition = strrpos($routesContent, '}');
-//     }
-
-//     // Jika masih tidak ditemukan, beri pesan error
-//     if ($lastRoutePosition === false) {
-//         echo "Error: Tidak dapat menemukan posisi terakhir dari array routes.\n";
-//         return;
-//     }
-
-//     // Tambahkan rute baru setelah posisi terakhir
-//     $newRoute = <<<EOT
-//     {
-//         path: '/{$pluralTableName}',
-//         element: <{$modelName}List />,
-//         layout: 'default',
-//     },
-// EOT;
-
-//     // Sisipkan rute baru ke dalam konten
-//     $routesContent = substr_replace($routesContent, $newRoute, $lastRoutePosition + 2, 0);
-
-//     // Tambahkan import untuk komponen List
-//     $importStatement = "const {$modelName}List = lazy(() => import('../pages/{$modelName}/List'));\n";
-//     $routesContent = preg_replace("/(import React from 'react';\nimport \{ lazy \} from 'react';)/", "$1\n$importStatement", $routesContent);
-
-//     // Simpan perubahan ke file routes.tsx
-//     file_put_contents($routesFile, $routesContent);
-
-//     echo "Route added to routes.tsx for {$modelName}List\n";
-// }
-
 function generateRoutesTsxContent($jsonFiles) {
     $imports = [];
     $routes = [];
@@ -505,14 +418,14 @@ function generateRoutesTsxContent($jsonFiles) {
         // Ambil nama tabel dari formName
         $tableName = strtolower($data['formName']);
         $modelName = ucfirst($tableName);
-        $pluralTableName = Str::plural($tableName);
+        // $pluralTableName = Str::plural($tableName);
 
         // Tambahkan import untuk komponen List
         $imports[] = "const {$modelName}List = lazy(() => import('../pages/{$modelName}/List'));";
 
         // Tambahkan rute untuk tabel ini
         $routes[] = "    {
-        path: '/{$pluralTableName}',
+        path: '/{$modelName}',
         element: <{$modelName}List />,
         layout: 'default',
     },";
